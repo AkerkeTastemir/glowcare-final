@@ -1,11 +1,12 @@
 {
-  "name": "final",
+  "name": "glowcare-final",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+  "start": "node server.js",
+  "dev": "nodemon server.js"
+  
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,9 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.1.5",
+    "mongoose": "^9.1.5"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.11"
   }
 }
