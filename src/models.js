@@ -53,12 +53,20 @@ const userSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
+const productSchema = new mongoose.Schema({
+  title: String,
+  skinTypes: [String],
+  concerns: [String],
+  qualities: [String]
+});
+
+
 const User = mongoose.model('User', userSchema);
 const Product = mongoose.model('Product', productSchema);
-const Order = mongoose.model('Order', orderSchema);
+// const Order = mongoose.model('Order', orderSchema);
 
 module.exports = {
-  User,
-  Product,
-  Order
+    User,
+    Product,
+    // Order
 };
