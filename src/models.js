@@ -53,7 +53,6 @@ const userSchema = new mongoose.Schema(
 );
 
 // ===== Product Schema =====
-// ✅ Под ваш формат:
 
 const productSchema = new mongoose.Schema(
   {
