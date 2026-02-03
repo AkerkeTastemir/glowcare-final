@@ -44,7 +44,7 @@ async function loadRecommendations(){
     bindActions(items);
   }catch(e){
     if(String(e.message || '').toLowerCase().includes('quiz not completed')){
-      recMsg.textContent = 'Quiz not completed. Go to Skin Quiz to get recommendations.';
+      recMsg.textContent = 'Quiz not completed. Please, take the survey.';
       return;
     }
     recMsg.textContent = e.message;
