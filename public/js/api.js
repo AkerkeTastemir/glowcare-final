@@ -1,4 +1,4 @@
-const API_BASE = `${location.origin}/api`;
+const API_BASE = 'https://glowcare-final.onrender.com/api';
 
 function getToken(){ return localStorage.getItem('token'); }
 function setToken(t){ localStorage.setItem('token', t); }
