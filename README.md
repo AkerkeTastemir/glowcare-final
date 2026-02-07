@@ -1,202 +1,218 @@
-# GlowCare — NoSQL (MongoDB) Final Project
+# GlowCare — Skincare Recommendation Web Application
+
+## Project Repository
+https://github.com/AkerkeTastemir/glowcare-final.git
+
+## Project Link
+https://glowcare-final.onrender.com
 
 ## Project Overview
 GlowCare is a web application for skincare product discovery. Users register/login, complete a skin quiz, receive personalized product recommendations, save items to wishlist, and place orders through checkout.
 
-## Tech Stack
+## Features
+- User registration and login using JWT authentication
+- Profile page with ability to update username
+- Skin quiz stored as embedded document in User
+- Personalized recommendations using MongoDB aggregation pipeline
+- Product catalog with search, filters, pagination, and text index
+- Wishlist implemented using `$addToSet` and `$pull`
+- Cart with checkout that updates stock using `$inc`
+- Admin role with product management and analytics endpoints
+- SMTP email notifications (registration + discount notifications)
+
+## Technology Stack
 - **Backend:** Node.js, Express
 - **Database:** MongoDB (Mongoose)
-- **Auth:** JWT + bcrypt
-- **Frontend:** HTML + Bootstrap + Vanilla JS (fetch API)
+- **Authentication:** JWT + bcrypt
+- **Frontend:** HTML, Bootstrap, Vanilla JavaScript (Fetch API)
+- **Email:** Nodemailer + external SMTP provider (API keys in `.env`)
 
-## Features
-- User registration and login (JWT)
-- Profile page (view + update username)
-- Skin quiz saved as **embedded document** in User
-- Personalized recommendations using **aggregation pipeline**
-- Product catalog with search, filters, pagination (text index)
-- Wishlist using **advanced updates** ($addToSet / $pull)
-- Cart (localStorage) + checkout → creates orders and updates stock using **$inc**
-- Admin role can manage products and view analytics endpoints
+## System Architecture
+Flow: Frontend (HTML/JS) → HTTP requests (fetch) → Express REST API → MongoDB (Mongoose) → JSON response → UI renders data.
+![Flow Diagram](screenshots/flow_diagram.png)
+Frontend - client side. Frontend is built with HTML + Bootstrap and communicates with the backend using fetch requests.  
+
+Express and MongoDB - server side. Backend is an Express REST API that processes requests, validates data, applies business logic, queries MongoDB using Mongoose, and returns JSON responses.
+**Data Flow:** Frontend → Express REST API → MongoDB → JSON Response → UI Rendering
 
 ## Project Structure
 ```
 final
-├── server.js              # Entry point of the application
-├── .env                   # Environment variables (DB URI, Secret keys)
-├── .gitignore             # Files and folders to ignore in Git
-├── package.json           # Project dependencies and scripts
-└── src/                   # Source code
-    ├── db.js              # MongoDB connection setup
-    ├── middleware.js      # Authentication and validation middlewares
-    ├── models.js          # Mongoose schemas and models
-    └── routes/            # API Route handlers
-        ├── auth.js        # Routes for login/registration
-        ├── user.js        # User profile and data management
-        ├── products.js    # Product catalog logic
-        └── orders.js      # Order processing logic
+├── server.js                 # Application entry point (Express server)
+├── .env                      # Environment variables (MongoDB URI, JWT secret, SMTP keys)
+├── .gitignore                # Git ignored files
+├── package.json              # Dependencies and scripts
+├── package-lock.json
+├── README.md                 # Project documentation
+│
+├── screenshots/              # Screenshots for report and README
+│   ├── flow_diagram.png              # Flow diagram
+│   ├── login.png              # Login page
+│   ├── register.png              # Register page
+│   ├── profile.png           # User profile page
+│   ├── home.png              # Home page (recommendations, hits)
+│   ├── catalog.png           # Product catalog with filters
+│   ├── wishlist.png          # Wishlist page
+│   ├── cart.png              # Cart and checkout page
+│   ├── skin_quiz.png              # Skin quiz page
+│   ├── login_postman.png     # Postman: login endpoint
+│   ├── recommendations_postman.png # Postman: recommendations endpoint
+│   └── checkout_postman.png  # Postman: checkout endpoint
+│
+├── public/                   # Frontend 
+│   ├── css/
+│   │   └── app.css           # Global styles
+│   │
+│   ├── js/
+│   │   ├── api.js            # API helper (fetch wrapper, JWT handling)
+│   │   ├── auth.js           # Login & registration logic
+│   │   ├── home.js           # Home page (recommendations, new products)
+│   │   ├── catalog.js        # Product catalog, filters, admin actions
+│   │   ├── wishlist.js       # Wishlist logic
+│   │   ├── cart.js           # Cart and checkout logic
+│   │   ├── profile.js        # User profile logic
+│   │   ├── quiz.js           # Skin quiz logic
+│   │   └── ui.js             # Shared UI helpers (navigation, formatting)
+│   │
+│   └── pages/
+│       ├── auth.html         # Login & registration page
+│       ├── home.html         # Home page
+│       ├── catalog.html      # Product catalog page
+│       ├── wishlist.html     # Wishlist page
+│       ├── cart.html         # Cart & checkout page
+│       ├── profile.html      # User profile page
+│       └── quiz.html         # Skin quiz page
+│
+└── src/                      # Backend source code
+    ├── db.js                 # MongoDB connection
+    ├── models.js             # Mongoose schemas (User, Product, Order)
+    ├── middleware.js         # JWT auth, RBAC, validation, error handler
+    ├── mailer.js             # SMTP email configuration (Nodemailer)
+    │
+    └── routes/               # API routes
+        ├── auth.js           # Authentication routes (register, login)
+        ├── user.js           # User profile, quiz, wishlist
+        ├── products.js       # Products CRUD + admin logic + price change notifications
+        └── orders.js         # Orders, checkout, analytics (aggregations)
 ```
 
-## System Architecture
-Flow: Frontend (HTML/JS) → HTTP requests (fetch) → Express REST API → MongoDB (Mongoose) → JSON response → UI renders data.
-![alt text](image.png)
-Frontend - client side. Frontend is built with HTML + Bootstrap and communicates with the backend using fetch requests.  
+## Database Design
+### User Collection (`users`)
+- `email` 
+- `password`
+- `role` 
+- `username` 
+- `quizProfile` (Embedded document: `skinType`, `concerns`, `preferences`, `completedAt`)
+- `wishlist` (Array of Product ObjectIds)
+- `createdAt`, `updatedAt` (timestamps)
 
-Express and MongoDB - server side. Backend is an Express REST API that processes requests, validates data, applies business logic, queries MongoDB using Mongoose, and returns JSON responses.
-
-## Database Design (Schemas)
-
-### 1. User Collection (users)
-Key fields:
-- `email` (String, unique)
-- `password` (String, hashed)
-- `role` (String: user/admin)
-- `username` (String)
-- `quizProfile` (Embedded document)
-  - `skinType` (String)
-  - `concerns` ([String])
-  - `preferences` ([String])
-  - `completedAt` (Date)
-- `wishlist` ([ObjectId] ref Product)
-- timestamps: `createdAt`, `updatedAt`
-
-Data model choice:
-- quizProfile is embedded because it belongs only to the user and is always accessed with the user.
-- wishlist references products because products are shared between many users.
-
-### 2. Product Collection (products)
-Key fields:
+### Product Collection (`products`)
 - `title`, `brand`, `category`
 - `price`, `stock`
-- recommendation tags: `skinTypes`, `concerns`, `qualities`
+- `skinTypes`, `concerns`, `qualities`
 - `soldCount`
 - timestamps
 
-### 3. Order Collection (orders)
-Key fields:
-- `userId` (ref User)
-- `items[]` (embedded)
-  - `productId` (ref Product)
-  - `quantity`
-  - `price`
+### Order Collection (`orders`)
+- `userId` (Reference to User)
+- `items[]` (Embedded: `productId`, `quantity`, `price`)
 - `totalPrice`
-- `status` (pending/paid/shipped/cancelled)
+- `status`
 - timestamps
 
-Embedded choice:
-- order items are embedded because they are part of a single order document and are always retrieved together.
+## REST API
+### Authentication (`/api/auth`)
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
-## REST API Design
-The API follows REST principles:
-- `/api/auth` for authentication
-- `/api/user` for profile, quiz, wishlist
-- `/api/products` for product catalog and admin CRUD
-- `/api/orders` for checkout and order history
+### User (`/api/user`)
+- `GET /api/user/profile`
+- `PUT /api/user/profile`
+- `GET /api/user/wishlist`
+- `POST /api/user/wishlist/:productId`
+- `DELETE /api/user/wishlist/:productId`
+- `POST /api/user/quiz`
+- `GET /api/user/quiz/recommendations` *(aggregation)*
 
-Auth:
-- POST /api/auth/register
-- POST /api/auth/login
+### Products (`/api/products`)
+- `GET /api/products` *(search/filters/pagination)*
+- `GET /api/products/:id`
+- `POST /api/products` *(admin only)*
+- `PUT /api/products/:id` *(admin only)*
+- `DELETE /api/products/:id` *(admin only)*
 
-User / Profile / Quiz / Wishlist:
-- GET /api/user/profile
-- PUT /api/user/profile
-- GET /api/user/wishlist
-- POST /api/user/wishlist/:productId
-- DELETE /api/user/wishlist/:productId
-- POST /api/user/quiz
-- GET /api/user/quiz/recommendations (aggregation)
-  
-Products (Catalog):
-- GET /api/products (filters: search, category, minPrice, maxPrice, page, limit)
-- GET /api/products/:id
-- POST /api/products (admin only)
-- PUT /api/products/:id (admin only)
-- DELETE /api/products/:id (admin only)
+### Orders (`/api/orders`)
+- `POST /api/orders/checkout` *(creates order + updates stock via `$inc`)*
+- `GET /api/orders/my`
+- `GET /api/orders/stats/top-selling` *(admin, aggregation)*
+- `GET /api/orders/stats/revenue-by-category` *(admin, aggregation)*
 
-Orders
-- POST /api/orders/checkout (creates order + updates product stock via $inc)
-- GET /api/orders/my
-- GET /api/orders/stats/top-selling (admin, aggregation)
-- GET /api/orders/stats/revenue-by-category (admin, aggregation)
-
-Endpoints include:
-- Full CRUD on products
-- Multiple user endpoints (profile, wishlist, quiz)
-- Advanced updates ($addToSet, $pull, $inc, $set)
-- Aggregation endpoints for recommendations and analytics
-  
 ## Advanced MongoDB Operations
+### Advanced Updates
+- Wishlist: `$addToSet`, `$pull`
+- Quiz: `$set` embedded `quizProfile`
+- Checkout: `$inc` (decrease stock, increase soldCount)
 
-### 1. Advanced Updates
-- Wishlist:
-  - Add: `$addToSet` to avoid duplicates
-  - Remove: `$pull`
-- Quiz:
-  - Update embedded quizProfile: `$set`
-- Checkout (stock + soldCount):
-  - `$inc: { stock: -qty, soldCount: qty }`
+### Aggregation Framework
+- Recommendations pipeline (multi-stage `$match`, `$addFields`, `$sort`, `$limit`)
+- Admin analytics:
+  - Top-selling products (`$unwind`, `$group`, `$sort`, `$limit`)
+  - Revenue by category (`$lookup`, `$group`, `$project`, `$sort`)
 
-### 2. Aggregation Framework
-
-#### A) Recommendations based on quiz (User)
-Pipeline stages:
-- `$match` products by skin type and at least one concern
-- `$addFields` calculates match scores using `$setIntersection` and `$size`
-- `$sort` by score and popularity
-- `$limit` top results
-
-This returns the most relevant products for the user.
-
-#### B) Top Selling products (Admin)
-Pipeline:
-- `$unwind` items
-- `$group` by productId to sum quantity and revenue
-- `$sort` and `$limit`
-
-#### C) Revenue by Category (Admin)
-Pipeline:
-- `$unwind` items
-- `$lookup` products
-- `$group` by category with revenue
-- `$project` clean output
-- `$sort`
-
-## Indexing and Optimization Strategy
-Indexes used:
-- Products compound index `{ category: 1, price: 1 }` for catalog filtering and sorting.
-- Products text index for full-text search across title/brand/category/qualities.
-- Orders index `{ userId: 1, createdAt: -1 }` for fast “my orders” queries.
-
-These indexes reduce query time for common UI actions: browsing catalog, searching, and viewing order history.
-
-## Authentication and Authorization
-- JWT is issued during login/register and stored on frontend (localStorage).
-- Protected routes require `Authorization: Bearer <token>`.
-- Middleware verifies JWT and sets `req.user`.
-- Admin-only routes use role checks (`requireRole("admin")`).
+## Authentication & Authorization
+- JWT issued during login/register and stored in frontend (localStorage)
+- Protected routes require header: `Authorization: Bearer <token>`
+- `authJWT` middleware verifies JWT and sets `req.user`
+- Admin-only routes use `requireRole("admin")`
 
 ## Frontend Pages
 Implemented pages:
 1) Auth (login/register)
 2) Profile
 3) Home (recommendations + new arrivals)
-4) Catalog (filters/search/pagination)
+4) Catalog
 5) Wishlist
-6) Cart + Checkout (+ My Orders)
+6) Cart + Checkout
 7) Quiz
+
+## Frontend Demonstration
+1. Authentication page (login and registration) :  The authentication page allows users to register and log in using JWT-based authentication. After successful login, the user is redirected to the profile page.
+![Login page](screenshots/login.png)
+![Register page](screenshots/register.png)
+2. Profile Page: The profile page displays user information and allows updating profile data such as the username. The page is accessible only to authenticated users.
+![Profile page](screenshots/profile.png)
+3. Home Page (Recommendations): The home page shows personalized product recommendations based on the completed skin quiz and highlights newly added products.
+![Home page](screenshots/home.png)
+4.	Catalog Page: The catalog page displays all available products with support for search, category filtering, price filtering, pagination, and admin actions.
+![Catalog page](screenshots/catalog.png)
+5.	Wishlist Page: The wishlist page allows users to view, add, and remove products saved to their wishlist.
+![Wishlist page](screenshots/wishlist.png)
+6.	Cart Page: The cart page displays selected products and allows users to place an order through the checkout process, which updates product stock and creates an order in the database.
+![Cart page](screenshots/cart.png)
+7.	Skin Quiz Page: The skin quiz page allows users to select skin type, concerns, and preferences, which are stored as an embedded document and used to generate personalized recommendations.
+![Skin Quiz page](screenshots/skin_quiz.png)
+
+## Backend Demostration
+1.	User login API request: Successful login request returning a JWT token used for authenticated requests.
+![Login(postman) page](screenshots/login_postman.png)
+2.	Recommendations API response: Response from the aggregation-based recommendations endpoint returning personalized product data in JSON format.
+![Recommendations(postman) page](screenshots/recommendations_postman.png)
+3.	Checkout API request: Checkout request creating a new order and updating product stock using advanced MongoDB update operators.
+![Checkout(postman) page](screenshots/checkout_postman.png)
 
 ## Team Contribution
 Diana:
 - Auth endpoints integration (login/register)
 - User model and user routes: profile, quiz, wishlist
 - Quiz recommendations aggregation
-- Frontend pages: Auth, Profile, Quiz, Wishlist, Home integration
+- Frontend pages: Auth, Profile, Quiz, Wishlist
 
 Akerke:
 - Product and Order schemas + indexes
 - Product CRUD endpoints + search/filter/pagination
 - Checkout logic (advanced $inc updates)
 - Admin aggregation endpoints: top-selling and revenue-by-category
+- Frontend pages: Home, Catalog, Cart
 
 ## Run the project
   1. Clone the repository
@@ -208,6 +224,11 @@ Akerke:
     PORT=3000
     MONGO_URI=our_mongodb_connection_string
     JWT_SECRET=our_secret_key
+    SMTP_HOST=smtp_provider_host
+    SMTP_PORT=587
+    SMTP_USER=apikey
+    SMTP_PASS=our_smtp_api_key
+    SMTP_FROM=our_email@gmail.com
   4. Start the server:
    
     npm run dev
