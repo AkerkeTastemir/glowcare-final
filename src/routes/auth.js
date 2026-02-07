@@ -2,16 +2,14 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
+const { sendEmail } = require('../mailer');
+const { validateRegister, validateLogin } = require('../middleware');
 
 const router = express.Router();
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', validateRegister, async (req, res, next) => {
     try {
         const { email, password, username } = req.body;
-
-        if (!email || !password || !username) {
-            return res.status(400).json({ message: 'Missing fields' });
-        }
 
         const exists = await User.findOne({ email });
         if (exists) {
@@ -26,6 +24,21 @@ router.post('/register', async (req, res, next) => {
             username
         });
 
+        try {
+            await sendEmail(
+                user.email,
+                'GlowCare registration complete!',
+                `<h3>Welcome, ${user.username}!</h3>
+            <p>Thanks for registering at GlowCare.</p><br>
+            <p>Open <a href="https://glowcare-final.onrender.com">glowcare.com</a> to see more!</p>
+            <p>Happy shopping!</p><br>
+            <p>Best regards,</p>
+            <p>GlowCare team.</p>`
+            );
+        } catch (err) {
+            console.error('Email failed', err.message);
+        }
+
         const token = jwt.sign(
             { id: user._id, role: user.role },
             process.env.JWT_SECRET,
@@ -38,13 +51,9 @@ router.post('/register', async (req, res, next) => {
     }
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', validateLogin, async (req, res, next) => {
     try {
         const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Missing fields' });
-        }
 
         const user = await User.findOne({ email });
         if (!user) {

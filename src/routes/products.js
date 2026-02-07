@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { Product } = require("../models");
+const { User, Product } = require("../models");
 const { authJWT, requireRole } = require("../middleware");
+const { sendEmail } = require('../mailer');
 
 // GET /api/products?search=&category=&minPrice=&maxPrice=&page=&limit=
 router.get("/", async (req, res, next) => {
@@ -61,11 +62,34 @@ router.post("/", authJWT, requireRole("admin"), async (req, res, next) => {
 // ADMIN: PUT /api/products/:id
 router.put("/:id", authJWT, requireRole("admin"), async (req, res, next) => {
   try {
+    const old = await Product.findById(req.params.id)
+    if (!old) return res.status(404).json({ message: "Product not found" });
+
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
-    if (!updated) return res.status(404).json({ message: "Product not found" });
+
+    const users = await User.find({ wishlist: req.params.id })
+
+    if (updated.price < old.price) {
+      for (const user of users) {
+        try {
+          await sendEmail(
+            user.email,
+            'Product discount!',
+            `<h3>We have great news, ${user.username}!</h3>
+          <p>The ${updated.title} you added to your wishlist is on sale right now.</p><br>
+          <p>Open <a href="https://glowcare-final.onrender.com">glowcare.com</a> to see more!</p>
+          <p>Happy shopping!</p><br>
+          <p>Best regards,</p>
+          <p>GlowCare team.</p>`
+          );
+        } catch (err) {
+          console.error('Email failed', err.message);
+        }
+      }
+    }
     res.json(updated);
   } catch (err) {
     next(err);

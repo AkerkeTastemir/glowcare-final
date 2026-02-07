@@ -41,4 +41,38 @@ function errorHandler(err, req, res, next) {
     res.status(status).json({ message });
 }
 
-module.exports = { authJWT, requireRole, errorHandler }
+function validateRegister(req, res, next) {
+    const { email, password, username } = req.body;
+
+    if (!email || !password || !username) {
+        return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    const emailOk = /^\S+@\S+\.\S+$/.test(email);
+    if (!emailOk) {
+        return res.status(400).json({ message: 'Invalid email' });
+    }
+
+    if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    next();
+}
+
+function validateLogin(req, res, next) {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    const emailOk = /^\S+@\S+\.\S+$/.test(email);
+    if (!emailOk) {
+        return res.status(400).json({ message: 'Invalid email' });
+    }
+
+    next();
+}
+
+module.exports = { authJWT, requireRole, errorHandler, validateRegister, validateLogin }

@@ -23,11 +23,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'pages', 'home.html'));
-});
-
-app.get('*', (req, res, next) => {
+app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   res.sendFile(path.join(__dirname, 'public', 'pages', 'home.html'));
 });
