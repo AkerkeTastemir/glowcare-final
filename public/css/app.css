@@ -287,3 +287,104 @@ button,
   font-size:14px;
   letter-spacing:.5px;
 }
+/* ===== Home hint (nice message) ===== */
+.gc-hint{
+  padding:12px 14px;
+  border-radius:14px;
+  font-weight:700;
+  border:1px solid var(--border);
+}
+.gc-hint-success{
+  background: rgba(141, 216, 168, .22);
+  border-color: rgba(141, 216, 168, .45);
+  color: #1f5b32;
+}
+.gc-hint-danger{
+  background: rgba(255, 107, 107, .12);
+  border-color: rgba(255, 107, 107, .25);
+  color: #b32323;
+}
+
+/* ===== Carousel ===== */
+.gc-carousel{
+  position:relative;
+  border-radius:16px;
+  overflow:visible; 
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.85);
+  box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+
+.gc-car-viewport{
+  overflow:hidden;
+  border-radius:16px;
+}
+.gc-car-track{
+  display:flex;
+  width:100%;
+  transition: transform .35s ease;
+}
+
+.gc-car-slide{
+  min-width:100%;
+  height:500px;
+  position:relative;
+}
+
+.gc-car-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+
+.gc-car-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:24px;
+  height:24px;
+  border:none;
+  border-radius:999px;
+  background: rgba(255, 255, 255, .6);   
+  border:1px solid rgba(255,255,255,.7);
+  backdrop-filter: blur(6px);           
+  font-weight:900;
+  color: var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:3;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+}
+
+
+.gc-car-arrow.left{ left: -20px; }
+.gc-car-arrow.right{ right: -20px; }
+
+.gc-car-arrow:hover{
+  background: rgba(245, 228, 228, 0.85);
+}
+
+.gc-car-dots{
+  position:absolute;
+  left:0; right:0;
+  bottom:10px;
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  z-index:2;
+}
+
+.gc-dot{
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  border:none;
+  background: rgba(31,35,40,.25);
+}
+.gc-dot.active{
+  background: var(--accent);
+}

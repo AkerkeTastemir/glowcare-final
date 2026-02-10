@@ -22,7 +22,6 @@
         <a id="navCart" class="navlink" href="/pages/cart.html">Cart</a>
         <a id="navQuiz" class="navlink" href="/pages/quiz.html">Skin Quiz</a>
         <a id="navProfile" class="navlink" href="/pages/profile.html">Profile</a>
-
       </nav>
 
       <button id="btnLogout" class="btn btn-outline-danger w-100 mt-3">Logout</button>
@@ -37,29 +36,43 @@
           </div>
         </div>
 
+        <!--  New Arrivals FIRST -->
         <div class="card-soft p-4 mb-4">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <h4 class="mb-1">Your Recommendations</h4>
-              <div class="small-muted">Based on your quiz</div>
-            </div>
-            <a class="btn btn-outline-dark" href="/pages/quiz.html">Update quiz</a>
-          </div>
-
-          <div id="recMsg" class="small text-danger mt-2"></div>
-          <div id="recGrid" class="grid mt-3"></div>
-        </div>
-
-        <div class="card-soft p-4">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
               <h4 class="mb-1">New Arrivals</h4>
-              <div class="small-muted">Latest products</div>
             </div>
             <a class="btn btn-outline-dark" href="/pages/catalog.html">View all</a>
           </div>
 
+          <!-- Carousel -->
+          <div class="gc-carousel mt-3" id="newCarousel">
+            <button class="gc-car-arrow left" id="carPrev" aria-label="Previous slide">&lt;</button>
+
+            <div class="gc-car-viewport">
+              <div class="gc-car-track" id="carTrack"></div>
+            </div>
+
+            <button class="gc-car-arrow right" id="carNext" aria-label="Next slide">&gt;</button>
+
+            <div class="gc-car-dots" id="carDots"></div>
+          </div>
+
+          <!-- Fallback grid -->
           <div id="newGrid" class="grid mt-3"></div>
+        </div>
+
+        <!-- Recommendations SECOND -->
+        <div class="card-soft p-4 mb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="mb-1">Your Recommendations</h4>
+            </div>
+            <a class="btn btn-outline-dark" href="/pages/quiz.html">Update quiz</a>
+          </div>
+
+          <div id="recMsg" class="gc-hint mt-2" style="display:none;"></div>
+          <div id="recGrid" class="grid mt-3"></div>
         </div>
       </div>
     </main>
