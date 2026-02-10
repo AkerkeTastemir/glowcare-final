@@ -34,37 +34,53 @@
         </div>
       </div>
 
-      <div class="card-soft p-4 mb-3">
-        <div class="row g-2">
-          <div class="col-md-4">
-            <label class="form-label">Search</label>
-            <input id="search" class="form-control" placeholder="brand, title, category">
+      <div class="mb-3">
+        <!-- Search bar + Filter button -->
+        <div class="catalog-toolbar">
+          <div class="searchbar">
+            <span class="search-icon">🔍</span>
+            <span class="search-label">Search</span>
+            <input id="search" class="search-input" placeholder="brand, title, category" />
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Category</label>
-            <input id="category" class="form-control" placeholder="cleanser / serum / cream">
+          <button id="btnToggleFilters" class="btn-filter" type="button">Filter</button>
+        </div>
+
+        <!-- Filters -->
+        <div id="filtersPanel" class="card-soft p-3 filters-panel hidden">
+          <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+              <label class="form-label">Category</label>
+              <input id="category" class="form-control" placeholder="cleanser / serum / cream">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Min price</label>
+              <input id="minPrice" type="number" class="form-control" placeholder="0">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Max price</label>
+              <input id="maxPrice" type="number" class="form-control" placeholder="100">
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+              <button id="btnApply" class="btn btn-accent text-white w-100" type="button">Apply</button>
+              <button id="btnClearFilters" class="btn btn-outline-dark w-100" type="button">Clear</button>
+            </div>
           </div>
-          <div class="col-md-2">
-            <label class="form-label">Min price</label>
-            <input id="minPrice" type="number" class="form-control" placeholder="0">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Max price</label>
-            <input id="maxPrice" type="number" class="form-control" placeholder="100">
-          </div>
-          <div class="col-md-1 d-flex align-items-end">
-            <button id="btnApply" class="btn btn-accent text-white w-100">Go</button>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="small-muted">Page controls:</div>
+            <div class="d-flex gap-2">
+              <button id="btnPrev" class="btn btn-outline-dark btn-sm">Prev</button>
+              <div class="kbd" id="pageInfo">1</div>
+              <button id="btnNext" class="btn btn-outline-dark btn-sm">Next</button>
+            </div>
           </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-3">
-          <div class="small-muted">Page controls:</div>
-          <div class="d-flex gap-2">
-            <button id="btnPrev" class="btn btn-outline-dark btn-sm">Prev</button>
-            <div class="kbd" id="pageInfo">1</div>
-            <button id="btnNext" class="btn btn-outline-dark btn-sm">Next</button>
-          </div>
-        </div>
+        <!-- Category chips -->
+        <div id="categoryChips" class="category-chips mt-3"></div>
+
+        <!-- Admin -->
+        <div id="adminBar" class="d-flex gap-2 mt-3" style="display:none;"></div>
       </div>
 
       <div id="msg" class="small text-danger mb-2"></div>
