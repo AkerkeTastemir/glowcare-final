@@ -6,6 +6,24 @@ const recGrid = document.getElementById('recGrid');
 const newGrid = document.getElementById('newGrid');
 const recMsg = document.getElementById('recMsg');
 
+// Carousel elements
+const carTrack = document.getElementById('carTrack');
+const carDots = document.getElementById('carDots');
+const carPrev = document.getElementById('carPrev');
+const carNext = document.getElementById('carNext');
+
+let carIndex = 0;
+let carTimer = null;
+
+
+
+const carouselSlides = [
+  { img: '/images/slide1.png', title: '', subtitle: '' },
+  { img: '/images/slide2.png', title: '', subtitle: '' },
+  { img: '/images/slide3.png', title: '', subtitle: '' },
+  { img: '/images/slide4.png', title: '', subtitle: '' },
+];
+
 function productCard(p){
   return `
     <div class="card-soft product-card">
@@ -28,39 +46,6 @@ function productCard(p){
       </div>
     </div>
   `;
-}
-
-async function loadRecommendations(){
-  recGrid.innerHTML = '';
-  recMsg.textContent = '';
-
-  try{
-    const items = await apiFetch('/user/quiz/recommendations');
-    if(!items || items.length === 0){
-      recMsg.textContent = 'No recommendations found. Try updating your quiz.';
-      return;
-    }
-    recGrid.innerHTML = items.map(productCard).join('');
-    bindActions(items);
-  }catch(e){
-    if(String(e.message || '').toLowerCase().includes('quiz not completed')){
-      recMsg.textContent = 'Quiz not completed. Please, take the survey.';
-      return;
-    }
-    recMsg.textContent = e.message;
-  }
-}
-
-async function loadNew(){
-  newGrid.innerHTML = '';
-  try{
-    const data = await apiFetch('/products?limit=6&page=1');
-    const items = data.items || [];
-    newGrid.innerHTML = items.map(productCard).join('');
-    bindActions(items);
-  }catch(e){
-    newGrid.innerHTML = `<div class="small text-danger">${e.message}</div>`;
-  }
 }
 
 function bindActions(items){
@@ -89,5 +74,112 @@ function bindActions(items){
   });
 }
 
-loadRecommendations();
+/* ===== Carousel ===== */
+function renderCarousel(){
+  if (!carTrack || !carDots) return;
+
+  carTrack.innerHTML = carouselSlides.map(s => `
+    <div class="gc-car-slide">
+      <img class="gc-car-img" src="${s.img}" alt="${s.title}">
+      <div class="gc-car-overlay">
+        <div class="gc-car-title">${s.title}</div>
+        <div class="gc-car-sub">${s.subtitle}</div>
+      </div>
+    </div>
+  `).join('');
+
+  carDots.innerHTML = carouselSlides.map((_, i) =>
+    `<button class="gc-dot ${i===0 ? 'active' : ''}" data-dot="${i}" aria-label="Go to slide ${i+1}"></button>`
+  ).join('');
+
+  carDots.querySelectorAll('[data-dot]').forEach(b => {
+    b.onclick = () => {
+      carIndex = Number(b.getAttribute('data-dot'));
+      updateCarousel();
+      restartCarouselTimer();
+    };
+  });
+
+  carPrev?.addEventListener('click', () => {
+    carIndex = (carIndex - 1 + carouselSlides.length) % carouselSlides.length;
+    updateCarousel();
+    restartCarouselTimer();
+  });
+
+  carNext?.addEventListener('click', () => {
+    carIndex = (carIndex + 1) % carouselSlides.length;
+    updateCarousel();
+    restartCarouselTimer();
+  });
+
+  updateCarousel();
+  restartCarouselTimer();
+}
+
+function updateCarousel(){
+  if (!carTrack || !carDots) return;
+  carTrack.style.transform = `translateX(-${carIndex * 100}%)`;
+
+  carDots.querySelectorAll('.gc-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === carIndex);
+  });
+}
+
+function restartCarouselTimer(){
+  if (carTimer) clearInterval(carTimer);
+  carTimer = setInterval(() => {
+    carIndex = (carIndex + 1) % carouselSlides.length;
+    updateCarousel();
+  }, 8000); // ✅ change to 120000 if you really want 2 minutes
+}
+
+/* ===== Data loads ===== */
+async function loadRecommendations(){
+  recGrid.innerHTML = '';
+
+  try{
+    const items = await apiFetch('/user/quiz/recommendations');
+
+    if(!items || items.length === 0){
+      recMsg.style.display = 'block';
+      recMsg.className = 'gc-hint gc-hint-success mt-2';
+      recMsg.textContent = 'Take the Skin Quiz to unlock personalized recommendations 💚';
+      return;
+    }
+
+    recMsg.style.display = 'none';
+    recGrid.innerHTML = items.map(productCard).join('');
+    bindActions(items);
+  }catch(e){
+    const msg = String(e.message || '').toLowerCase();
+
+    if(msg.includes('quiz not completed')){
+      recMsg.style.display = 'block';
+      recMsg.className = 'gc-hint gc-hint-success mt-2';
+      recMsg.textContent = 'Take the Skin Quiz to unlock personalized recommendations 💚';
+      return;
+    }
+
+    recMsg.style.display = 'block';
+    recMsg.className = 'gc-hint gc-hint-danger mt-2';
+    recMsg.textContent = e.message;
+  }
+}
+
+async function loadNew(){
+  newGrid.innerHTML = '';
+
+  try{
+    const data = await apiFetch('/products?limit=6&page=1');
+    const items = data.items || [];
+    newGrid.innerHTML = items.map(productCard).join('');
+    bindActions(items);
+  }catch(e){
+    newGrid.innerHTML = `<div class="small text-danger">${e.message}</div>`;
+  }
+}
+
+// init
+renderCarousel();
 loadNew();
+loadRecommendations();
