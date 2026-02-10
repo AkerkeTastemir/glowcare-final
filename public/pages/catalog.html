@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GlowCare • Catalog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div class="d-flex">
+  <aside class="sidebar p-3">
+    <div class="brand fs-4 mb-2">GlowCare</div>
+    <div class="small-muted mb-3">Skincare, simplified.</div>
+
+    <nav class="d-grid gap-1">
+      <a id="navHome" class="navlink" href="/pages/home.html">Home</a>
+      <a id="navCatalog" class="navlink active" href="/pages/catalog.html">Catalog</a>
+      <a id="navWishlist" class="navlink" href="/pages/wishlist.html">Wishlist</a>
+      <a id="navCart" class="navlink" href="/pages/cart.html">Cart</a>
+      <a id="navQuiz" class="navlink" href="/pages/quiz.html">Skin Quiz</a>
+      <a id="navProfile" class="navlink" href="/pages/profile.html">Profile</a>
+    </nav>
+
+    <button id="btnLogout" class="btn btn-outline-danger w-100 mt-3">Logout</button>
+  </aside>
+
+  <main class="main flex-grow-1">
+    <div class="container" style="max-width: 1100px;">
+      <div class="d-flex align-items-end justify-content-between mb-3">
+        <div>
+          <h2 class="mb-1">Catalog</h2>
+          <div class="small-muted">Search and filter products</div>
+        </div>
+      </div>
+
+      <div class="card-soft p-4 mb-3">
+        <div class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label">Search</label>
+            <input id="search" class="form-control" placeholder="brand, title, category">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Category</label>
+            <input id="category" class="form-control" placeholder="cleanser / serum / cream">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Min price</label>
+            <input id="minPrice" type="number" class="form-control" placeholder="0">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Max price</label>
+            <input id="maxPrice" type="number" class="form-control" placeholder="100">
+          </div>
+          <div class="col-md-1 d-flex align-items-end">
+            <button id="btnApply" class="btn btn-accent text-white w-100">Go</button>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <div class="small-muted">Page controls:</div>
+          <div class="d-flex gap-2">
+            <button id="btnPrev" class="btn btn-outline-dark btn-sm">Prev</button>
+            <div class="kbd" id="pageInfo">1</div>
+            <button id="btnNext" class="btn btn-outline-dark btn-sm">Next</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="msg" class="small text-danger mb-2"></div>
+      <div id="grid" class="grid"></div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/catalog.js"></script>
+</body>
+</html>
