@@ -108,6 +108,7 @@ body{
   background:rgba(0,0,0,.05);
   border:1px solid var(--border);
 }
+
 /* ===== Catalog new UI ===== */
 .catalog-toolbar{
   display:flex;
@@ -147,7 +148,20 @@ body{
   background:#ff9e9e;
 }
 
-.filters-panel.hidden{ display:none; }
+/* filters animation */
+.filters-panel {
+  overflow: hidden;
+  transition: max-height .25s ease, opacity .2s ease, transform .2s ease;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.filters-panel.show {
+  max-height: 500px;  
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .category-chips{
   display:flex;
@@ -170,4 +184,106 @@ body{
   background:var(--text);
   color:#fff;
   border-color:var(--text);
+}
+
+/* ===== Admin buttons + Analytics ===== */
+.admin-bar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:stretch;
+}
+
+.btn-admin{
+  border:0;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:800;
+  cursor:pointer;
+  background:var(--accent2);
+  color:#1f2328;
+}
+
+.btn-admin.primary{
+  background:var(--text);
+  color:#fff;
+}
+
+.btn-admin:hover{ opacity:.9; }
+
+.analytics-card{
+  width:100%;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+.analytics-list li{
+  margin-bottom:6px;
+}
+/* ===== Unified buttons color ===== */
+button,
+.btn,
+.btn-outline-dark,
+.btn-outline-danger {
+  border-radius: 14px !important;
+  font-weight: 800;
+}
+
+.btn,
+.btn-outline-dark,
+.btn-outline-danger,
+.btn-admin,
+.btn-accent,
+.btn-filter {
+  background: var(--accent2) !important;
+  color: #1f2328 !important;
+  border: 0 !important;
+}
+
+.btn:hover,
+.btn-outline-dark:hover,
+.btn-outline-danger:hover,
+.btn-admin:hover,
+.btn-accent:hover,
+.btn-filter:hover {
+  opacity: .9;
+}
+
+/* Primary dark button (optional: for Add product) */
+.btn-primary-dark {
+  background: var(--text) !important;
+  color: #fff !important;
+}
+/* ===== Clean pagination ===== */
+.pagination-clean{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  margin:24px 0 8px;
+}
+
+.page-arrow{
+  background:transparent;
+  border:none;
+  color:var(--accent);
+  font-size:22px;
+  line-height:1;
+  padding:4px 8px;
+  cursor:pointer;
+  border-radius:8px;
+}
+
+.page-arrow:hover{
+  background:rgba(255,107,107,.12);
+}
+
+.page-number{
+  font-weight:700;
+  color:var(--text);
+  font-size:14px;
+  letter-spacing:.5px;
 }

@@ -42,7 +42,7 @@ function normalize(s) {
 
 // ===== Category chips =====
 const categoriesSet = new Set();
-const baseChips = ['all', 'lipstick', 'cleanser', 'serum', 'cream', 'moisturizer', 'sunscreen', 'exfoliant', 'toner', 'mask'];
+const baseChips = ['all',  'cleanser', 'serum',  'moisturizer', 'sunscreen', 'exfoliant', 'toner', 'mask'];
 
 function renderChips() {
   if (!chipsWrap) return;
@@ -218,7 +218,7 @@ searchEl?.addEventListener('keydown', (e) => {
 
 // ===== Filters panel controls =====
 btnToggleFilters?.addEventListener('click', () => {
-  filtersPanel?.classList.toggle('hidden');
+  filtersPanel.classList.toggle('show');
 });
 
 btnApply?.addEventListener('click', () => {
@@ -255,12 +255,16 @@ function ensureAdminUI() {
   if (!isAdmin || !adminBar) return;
 
   adminBar.style.display = 'flex';
+  adminBar.classList.add('admin-bar');
+
   adminBar.innerHTML = `
-    <button id="btnAddProduct" class="btn btn-dark btn-sm">Add product</button>
-    <button id="btnViewAnalysis" class="btn btn-outline-dark btn-sm">View analysis</button>
-    <div id="analysisBox" class="card-soft p-3" style="display:none; width:100%; margin-top:12px;">
-      <h5 class="mb-2">Analytics</h5>
-      <div class="mb-3">
+    <button id="btnAddProduct" class="btn-admin primary">Add product</button>
+    <button id="btnViewAnalysis" class="btn-admin">View analysis</button>
+
+    <div id="analysisBox" class="analytics-card" style="display:none;">
+      <h5>Analytics</h5>
+
+      <div class="mb-2">
         <div class="fw-semibold">Top selling</div>
         <div id="topSellingList" class="small-muted">—</div>
       </div>
@@ -312,26 +316,29 @@ function ensureAdminUI() {
 
     if (!box) return;
 
-    box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
     if (box.style.display === 'none') return;
 
-    if (topEl) topEl.textContent = 'Loading...';
+    topEl.textContent = 'Loading...';
 
     try {
-      const [top] = await Promise.all([
-        apiFetch('/orders/stats/top-selling')
-      ]);
+      const top = await apiFetch('/orders/stats/top-selling');
 
-      if (topEl) {
-        if (!Array.isArray(top) || top.length === 0) topEl.textContent = 'No data';
-        else {
-          topEl.innerHTML = `<ol class="mt-1 mb-0">
-            ${top.map(x => `<li><span class="fw-semibold">${x.productName || x.title || x.name || 'Unnamed'}</span> — ${x.totalSold ?? x.count ?? 0}</li>`).join('')}
-          </ol>`;
-        }
+      if (!Array.isArray(top) || top.length === 0) {
+        topEl.textContent = 'No data';
+      } else {
+        topEl.innerHTML = `
+          <ol class="analytics-list mt-2 mb-0">
+            ${top.map(x => `
+              <li>
+                <b>${x.productName || x.title || x.name || 'Unnamed'}</b> — ${x.totalSold ?? x.count ?? 0}
+              </li>
+            `).join('')}
+          </ol>
+        `;
       }
     } catch (e) {
-      if (topEl) topEl.textContent = 'Failed to load';
+      topEl.textContent = 'Failed to load';
     }
   });
 }

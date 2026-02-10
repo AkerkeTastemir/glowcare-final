@@ -46,7 +46,7 @@
         </div>
 
         <!-- Filters -->
-        <div id="filtersPanel" class="card-soft p-3 filters-panel hidden">
+        <div id="filtersPanel" class="card-soft p-3 filters-panel my-3">
           <div class="row g-2 align-items-end">
             <div class="col-md-4">
               <label class="form-label">Category</label>
@@ -65,15 +65,6 @@
               <button id="btnClearFilters" class="btn btn-outline-dark w-100" type="button">Clear</button>
             </div>
           </div>
-
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="small-muted">Page controls:</div>
-            <div class="d-flex gap-2">
-              <button id="btnPrev" class="btn btn-outline-dark btn-sm">Prev</button>
-              <div class="kbd" id="pageInfo">1</div>
-              <button id="btnNext" class="btn btn-outline-dark btn-sm">Next</button>
-            </div>
-          </div>
         </div>
 
         <!-- Category chips -->
@@ -85,6 +76,14 @@
 
       <div id="msg" class="small text-danger mb-2"></div>
       <div id="grid" class="grid"></div>
+
+      <!--  PAGINATION -->
+      <div class="pagination-clean my-4">
+        <button id="btnPrev" class="page-arrow" aria-label="Previous page">&lt;</button>
+        <span class="page-number"><span id="pageInfo">1</span></span>
+        <button id="btnNext" class="page-arrow" aria-label="Next page">&gt;</button>
+      </div>
+
     </div>
   </main>
 </div>
