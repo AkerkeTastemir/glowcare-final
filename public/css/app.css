@@ -1,1 +1,173 @@
-с
+:root{
+  --bg1:#fff6f7;
+  --bg2:#ffffff;
+  --card:#ffffff;
+  --border:rgba(0,0,0,.08);
+  --text:#1f2328;
+  --muted:rgba(31,35,40,.6);
+  --accent:#ff6b6b;
+  --accent2:#ff9e9e;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+}
+
+.sidebar{
+  width:260px;
+  min-height:100vh;
+  background:rgba(255,255,255,.85);
+  border-right:1px solid var(--border);
+  backdrop-filter:blur(8px);
+  position:sticky;
+  top:0;
+}
+
+.brand{
+  font-weight:900;
+  letter-spacing:.4px;
+}
+
+.small-muted{ color:var(--muted); }
+
+.navlink{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  text-decoration:none;
+  color:var(--text);
+}
+
+.navlink:hover{ background:rgba(255,107,107,.12); }
+.navlink.active{ background:rgba(255,107,107,.18); }
+
+.main{
+  min-height:100vh;
+  padding:24px;
+}
+
+.card-soft{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+.btn-accent{
+  background:var(--accent) !important;
+  border:0 !important;
+}
+.btn-accent:hover{ opacity:.92; }
+
+.badge-soft{
+  background:rgba(255,107,107,.12);
+  color:#b32323;
+  border:1px solid rgba(255,107,107,.25);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+
+@media (max-width: 1100px){
+  .grid{ grid-template-columns:repeat(2, 1fr); }
+}
+@media (max-width: 820px){
+  .sidebar{ display:none; }
+  .grid{ grid-template-columns:1fr; }
+}
+
+.product-card{ padding:14px; }
+.product-title{
+  font-weight:800;
+  margin:0;
+  line-height:1.1;
+}
+.product-meta{
+  color:var(--muted);
+  font-size:.92rem;
+}
+
+.rowline{ border-top:1px solid var(--border); }
+.input-hint{ font-size:.85rem;color:var(--muted); }
+
+.kbd{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size:.85rem;
+  padding:2px 8px;
+  border-radius:10px;
+  background:rgba(0,0,0,.05);
+  border:1px solid var(--border);
+}
+/* ===== Catalog new UI ===== */
+.catalog-toolbar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.searchbar{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.search-icon{ font-size:16px; opacity:.85; }
+.search-label{ font-weight:800; color:var(--muted); }
+
+.search-input{
+  flex:1;
+  border:none;
+  outline:none;
+  background:transparent;
+  font-size:14px;
+}
+
+.btn-filter{
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:800;
+  cursor:pointer;
+  background:#ff9e9e;
+}
+
+.filters-panel.hidden{ display:none; }
+
+.category-chips{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.chip{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.85);
+  border-radius:999px;
+  padding:7px 12px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.chip:hover{ background:rgba(255,107,107,.08); }
+
+.chip.active{
+  background:var(--text);
+  color:#fff;
+  border-color:var(--text);
+}
