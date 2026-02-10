@@ -108,3 +108,66 @@ body{
   background:rgba(0,0,0,.05);
   border:1px solid var(--border);
 }
+/* ===== Catalog new UI ===== */
+.catalog-toolbar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.searchbar{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.search-icon{ font-size:16px; opacity:.85; }
+.search-label{ font-weight:800; color:var(--muted); }
+
+.search-input{
+  flex:1;
+  border:none;
+  outline:none;
+  background:transparent;
+  font-size:14px;
+}
+
+.btn-filter{
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:800;
+  cursor:pointer;
+  background:#ff9e9e;
+}
+
+.filters-panel.hidden{ display:none; }
+
+.category-chips{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.chip{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.85);
+  border-radius:999px;
+  padding:7px 12px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.chip:hover{ background:rgba(255,107,107,.08); }
+
+.chip.active{
+  background:var(--text);
+  color:#fff;
+  border-color:var(--text);
+}
