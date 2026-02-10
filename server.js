@@ -2,13 +2,11 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-
+const path = require('path');
 const connectDB = require('./src/db');
 
 const authRoutes = require('./src/routes/auth');
 const userRoutes = require('./src/routes/user');
-
-
 const productRoutes = require('./src/routes/products');
 const orderRoutes = require('./src/routes/orders');
 
@@ -18,17 +16,17 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.json({ message: 'GlowCare API is running' });
-});
+app.use(express.static("public"));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
-
-
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(__dirname, 'public', 'pages', 'home.html'));
+});
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });

@@ -111,11 +111,39 @@ router.get('/quiz/recommendations', authJWT, async (req, res, next) => {
             concerns: { $in: concerns }
         };
 
-        if (preferences.length > 0) {
-            match.qualities = { $in: preferences };
-        }
+        const pipeline = [
+            { $match: match },
+            {
+                $addFields: {
+                    concernsScore: {
+                        $size: { $setIntersection: ['$concerns', concerns] }
+                    },
+                    qualitiesScore: preferences.length > 0
+                        ? { $size: { $setIntersection: ['$qualities', preferences] } }
+                        : 0
+                }
+            },
+            { $addFields: { score: { $add: ['$concernsScore', '$qualitiesScore'] } } },
+            { $sort: { score: -1, soldCount: -1, createdAt: -1 } },
+            { $limit: 12 },
+            {
+                $project: {
+                    title: 1,
+                    brand: 1,
+                    category: 1,
+                    price: 1,
+                    stock: 1,
+                    skinTypes: 1,
+                    concerns: 1,
+                    qualities: 1,
+                    soldCount: 1,
+                    score: 1
+                }
+            }
+        ];
 
-        const products = await Product.aggregate([{ $match: match }]);
+        const products = await Product.aggregate(pipeline);
+
         res.json(products);
     } catch (err) {
         next(err);
